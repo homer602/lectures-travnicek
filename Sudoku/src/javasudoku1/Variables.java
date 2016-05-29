@@ -17,7 +17,7 @@ public class Variables {
 
     static final int NUMR = BOARD_SIZ;   //pocet kandidatu 1..9
     
-    static class BoardType {
+    public static class BoardType {
         public static final int SMALL = 4;
         public static final int BIG = 9;
     }
@@ -46,7 +46,7 @@ public class Variables {
     /**
      * Zkontroluje rozsah: 1 az max
      */
-    static void checkNonZeroRange(int max, int val) {
+    public static void checkNonZeroRange(int max, int val) {
         if (val < 1 || val > max) {
             throw new IllegalArgumentException("VALUE IS OUT OF RANGE:\"" + val + "\"");
         }
