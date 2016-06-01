@@ -7,7 +7,7 @@ package javasudoku_CURRENT;
 
 /**
  *
- * @author evo
+ * Nakonec k nicemu
  */
 public class Pair {
 
@@ -29,6 +29,7 @@ public class Pair {
     public int hashCode() {
         return x << 2 | y << 4;  // HMMMMMMMMMMM?????
     }
+    // no tady se spis hodi neco jako x.hashcode() ^ x.hashcode >>> 16 (ze souboru HashMap.java)
 
     @Override
     public boolean equals(Object obj) {

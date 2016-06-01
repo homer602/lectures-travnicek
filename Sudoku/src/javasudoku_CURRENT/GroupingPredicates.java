@@ -8,13 +8,12 @@ package javasudoku_CURRENT;
 import java.util.function.Predicate;
 
 /**
- *
  * @author evo
  */
 public class GroupingPredicates {
 
-    
-    // UDELAT JEDEN PREDIKAT MATCH ALL, pripadne prejmenovat na ROW,COL BOX kvuli lepsi citelnosti
+
+    // no kdyz budu delat p.x = x tak to bude zas matouci ne? (ohledne redundance ROW apod)
     public static Predicate<Position> rowMatch(int x) {  // prejmenovat MatchRow jen na Row atd nebo rowMatch//matchRow 
         return p -> p.ROW == x;
     }
@@ -23,40 +22,34 @@ public class GroupingPredicates {
         return p -> p.COLUMN == y;
     }
 
-    public static Predicate<Position> boxMatch(int z) { //matchBox = jakoze sirky?
-        return new Predicate<Position>() {
-            @Override
-            public boolean test(Position p) {
-                //JavaSudoku.BoxChecks++;//hm?
-                return p.BOX == z;
-
-            }
-        };
+    public static Predicate<Position> boxMatch(int z) {
+        return p -> p.BOX == z;
     }
-    
+
     /**
      * LEGACY CODE -- UZ SE NEPOUZIVA
      */
     public static Predicate<Position> hasValue() {
         //int z = 1;
         return new Predicate<Position>() {
-            //public void neco(){}; 
+            //public void neco(){};
             @Override
             public boolean test(Position p) {
                 return p.valueRef().get() > 0;// STEJNE SE UZ NEPOUZIVA
             }
         };
     }
-    
-     /**
-     * LEGACY CODE -- UZ SE NEPOUZIVA
+
+    /**
+     * LEGACY CODE -- UZ SE NEPOUZIVA ale mozna se jeste hodi...?
      */
     public static Predicate<Position> neighborsNotSolved() {// OR bitova maska -- A | B | C ?
 
         //return rowNotSolved().and(colNotSolved()).and(boxNotSolved());// PROC TO PRI AND DAVA LEPSI VYSLEDEK?
-        return rowNotSolved().or(colNotSolved()).or(boxNotSolved());// JE TO DOBRE?
+        return rowNotSolved().or(colNotSolved()).or(boxNotSolved());// JE TO DOBRE? :)
 
     }
+
     /**
      * LEGACY CODE -- UZ SE NEPOUZIVA
      */
@@ -65,6 +58,7 @@ public class GroupingPredicates {
         return (p -> p.rowSolved.get() == false);
 
     }
+
     /**
      * LEGACY CODE -- UZ SE NEPOUZIVA
      */
@@ -82,7 +76,7 @@ public class GroupingPredicates {
         return (p -> p.boxSolved.get() == false);
 
     }
-    
+
     //public static Comparator ..?
 
 }

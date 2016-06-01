@@ -10,7 +10,7 @@ import static javasudoku_CURRENT.Variables.*;
 
 /**
  *
- * @author evo
+ * Tento class je tez zraly na smazani
  */
 public class MyAtomicBooleanArray {
 

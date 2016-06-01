@@ -22,7 +22,7 @@ public class JavaSudoku {
         final boolean DEBUG = false;
 
         //List rowList = new LinkedList<Set>();
-        Map<Integer, Set> mappings = new LinkedHashMap();
+        Map<Integer, Set> mappings = new LinkedHashMap();//uz na nic....
         Map<Integer, Set> values = new LinkedHashMap();
         //Map colList = new LinkedHashMap<String,Set>();
         //Map boxList = new LinkedHashMap<String,Set>();
@@ -48,30 +48,17 @@ public class JavaSudoku {
         BOARD_BIG.parseInput(setting);
 
         Board BOARD_SMALL = new Board(BoardType.SMALL);
-
+        //alternativni zpusob k vlozeni dat
         BOARD_SMALL.positions[1][1].assign(1);
         BOARD_SMALL.positions[2][3].assign(1);
         BOARD_SMALL.positions[3][1].assign(4);
         BOARD_SMALL.positions[3][3].assign(3);
         BOARD_SMALL.positions[4][2].assign(3);
 
+        // vyberem board na hrani
         Board board = BOARD_BIG;
 
-        for (int y = 1; y <= board.NUMRANGE; y++) {
-            Collection boardMap = board.boardSet.values();
-            Set tempMap = (Set) boardMap.stream().filter(rowMatch(y)).collect(Collectors.toSet());
-            Set tempVal = (Set) boardMap.stream().filter(rowMatch(y)).collect(Collectors.mapping(Position::valueRef, Collectors.toSet()));
-            mappings.put(ROW + y, tempMap);
-            values.put(ROW + y, tempVal);
-            tempMap = (Set) boardMap.stream().filter(colMatch(y)).collect(Collectors.toSet());
-            tempVal = (Set) boardMap.stream().filter(colMatch(y)).collect(Collectors.mapping(Position::valueRef, Collectors.toSet()));
-            mappings.put(COL + y, tempMap);
-            values.put(COL + y, tempVal);
-            tempMap = (Set) boardMap.stream().filter(boxMatch(y)).collect(Collectors.toSet());
-            tempVal = (Set) boardMap.stream().filter(boxMatch(y)).collect(Collectors.mapping(Position::valueRef, Collectors.toSet()));
-            mappings.put(BOX + y, tempMap);
-            values.put(BOX + y, tempVal);
-        }
+       //po promazani tech map co nepotrebujeme je tu cisto a navic to dava lepsi iterace ze :)
 
         if (DEBUG) {
             board.printPolicka(PRINT_CANDIDATES);
@@ -81,12 +68,20 @@ public class JavaSudoku {
         //System.out.println(board.rowCandidates[1]);
         Set<Position> z = new HashSet();
         z.addAll(board.boardSet.values());
-        z.stream().forEach(x -> x.clearCandidates()); //ZATIM JEN RUCNE
-        z.stream().forEach(x -> x.clearCandidates());
-        z.stream().forEach(x -> x.clearCandidates());
-        z.stream().forEach(x -> x.clearCandidates());
-        z.stream().forEach(x -> x.clearCandidates());
-        z.stream().forEach(x -> x.clearCandidates());
+//        z.stream().forEach(x -> x.clearCandidates()); //ZATIM JEN RUCNE
+//        z.stream().forEach(x -> x.clearCandidates());
+//        z.stream().forEach(x -> x.clearCandidates());
+//        z.stream().forEach(x -> x.clearCandidates());
+//        z.stream().forEach(x -> x.clearCandidates());
+//        z.stream().forEach(x -> x.clearCandidates());
+
+        //aha no tady muzem vyuzit ten paralel stream ale vysledky to dava nahodne
+        // to je neco jako pri pouziti threadu coz je jasne :)
+        z.parallelStream().forEach(x -> x.clearCandidates());
+        z.parallelStream().forEach(x -> x.clearCandidates());
+        z.parallelStream().forEach(x -> x.clearCandidates());
+        z.parallelStream().forEach(x -> x.clearCandidates());
+        z.parallelStream().forEach(x -> x.clearCandidates());
         board.printPolicka(PRINT_CANDIDATES);
 
         //

@@ -25,8 +25,8 @@ public final class Board {
     public int iteraceKandidatu = 0;
 
     public Map boardSet = new HashMap<Pair, Position>(); //NESKODNY BUG V TYPU KOLEKCE //LEGACY jaky je rozdil mezi <NIC>  a <NECO>
-    //public Map<Pair,Position> boardSet = new HashMap<>(); //NESKODNY BUG V TYPU KOLEKCE //LEGACY jaky je rozdil mezi <NIC>  a <NECO>
-    //public Map<Pair,Position> boardSet = new HashMap(); //NESKODNY BUG V TYPU KOLEKCE //LEGACY jaky je rozdil mezi nebo uplne bez <>
+    //public Map<Pair,Position> boardSet = new HashMap<>(); //rozdil?
+    //public Map<Pair,Position> boardSet = new HashMap(); //rozdil?
     public Position[][] positions;
     public MyAtomicBooleanArray solvedRows;
     public MyAtomicBooleanArray solvedCols;
@@ -62,8 +62,9 @@ public final class Board {
         }
 
         final Set initCandidates = new HashSet();
-//        for (int i = 1; i <= NUMRANGE; i++) {     //TOTO ZVYSI POCET ITERACI PROC????
-//            initCandidates.add(new AtomicInteger(i));   // udelat pres stream generator?
+//      //NASLEDUJICI KOD JE TROCHU HALUZ, V NETBEANS TO PRIDA, TADY UBERE POCET ITERACI
+//        for (int i = 1; i <= NUMRANGE; i++) {
+//            initCandidates.add(new AtomicInteger(i));
 //        }
         for (int i = 1; i <= NUMRANGE; i++) {
             initCandidates.add(i);   // udelat pres stream generator?
@@ -76,9 +77,9 @@ public final class Board {
         this.positions = new Position[BOARD_SIZE + 1][BOARD_SIZE + 1];//+1 /nezajima me nulove pole
         for (int x = 1; x <= BOARD_SIZE; x++) {
             for (int y = 1; y <= BOARD_SIZE; y++) {
-                //positions[x][y] = new Position(x, y, this, rowCandidates[x],colCandidates[y],boxCandidates[getBox(x, y)]);
+                //je potreba predavat celou tuto sracku? co predat, jen x, y,this?  nazor? :)
                 positions[x][y] = new Position(x, y, this, rowCandidates[x], colCandidates[y], boxCandidates[getBox(x, y)]);
-                boardSet.put(new Pair(x, y), positions[x][y]);
+                boardSet.put(new Pair(x, y), positions[x][y]); // Pair je ke smazani dobry
 
             }
         }
@@ -94,21 +95,13 @@ public final class Board {
         return (int) ((Math.ceil((double) y / BOXSIZE)) + BOXSIZE * (rowIndex));
     }
 
-    //Board getInstance(){// <<<< jakoze board vrati rovnou board ALE jak VRATI TEN SET???
+    //Board getInstance(){// <<<< jakoze "board." vrati rovnou board ALE jak VRATI TEN SET???
     //    return this;
     //}
-    //Set getInstance(){// <<<< jakoze neco jako toto
+    //Set getInstance(){// <<<< jakoze neco jako toto resp chci pres board. vyvolat nejakou kolekci
     //  return board;
     //}
-    
-    /**
-     * LEGACY CODE
-     */
-    Set<Map.Entry> getBoard() {
-        //boardSet.forEach(x->x.);// NEJAKA SELEKCE ******************************
-        return boardSet.entrySet();
 
-    }
 
     void parseInput(int[][] input) {
 
@@ -121,22 +114,7 @@ public final class Board {
             }
         }
     }
-    
-    /**
-     * LEGACY CODE
-     */
-    Stream stream(int x) {
-        return Arrays.stream(positions[x]);
-        //return boardSetstream();
-    }
 
-    /**
-     * LEGACY CODE
-     */
-    Stream stream() {
-        //return Arrays.stream(positions[x]);
-        return getBoard().stream();
-    }
 
     public void printPolicka(int option) {
 
@@ -160,8 +138,8 @@ public final class Board {
                         System.out.print(pole.getCandidates() + " ");
                     }
                 }
-                //val = PRINT_INTERNAL;
-                if ((option) == 0) { //COMPARE BITMASK
+                //jakoby val = PRINT_INTERNAL;  //quick and dirty
+                if ((option) == 0) {
                     if (pole.valueRef().get() > 0) {
                         System.out.print(pole.valueRef() + " ");
                     } else {

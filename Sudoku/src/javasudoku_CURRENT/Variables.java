@@ -4,7 +4,7 @@
 package javasudoku_CURRENT;
 
 /**
- *
+ *  Ze pry Variables ma byt Constants
  * @author Michal
  */
 public class Variables {
@@ -12,7 +12,9 @@ public class Variables {
     
     //obosolete
     static final int BOARD_SIZ = 4;  //4 pokud je 4x4 board nebo 9 pokud je 9x9 pripadne 16x16
-    //dodelat Javadoc
+    //tady tu odmocninu si tu jeste priradim k boardu aby to nemuselo pocitat
+    // do toho "Enumu"  Boadtype? neco jako Boardtype.SMALL.Boardsize = 2;
+
     static final int BOXZE = (int) Math.sqrt(BOARD_SIZ);  //velikost maleho ramecku po 4 nebo 9
 
     static final int NUMR = BOARD_SIZ;   //pocet kandidatu 1..9

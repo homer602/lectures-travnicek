@@ -18,7 +18,7 @@ public class Position implements Comparable <Position>  {
 
     private AtomicInteger value = new AtomicInteger(0);
     private boolean valueset = false;
-    public byte x;  //souradnice x - K NICEMU POKUD MAM ROW apod?
+    public byte x;  //souradnice x - K NICEMU POKUD MAM ROW apod? JE TO ZLY? :)
     public byte y;  //souradnice y       //AtomicIntegerFieldUpdater >><<<<<<<???
     //private Set candidates = new HashSet<AtomicInteger>();//{0,1,2,3,4...,8,9}; pouzit BitSet
     public Set internalCandidates = new HashSet();//{0,1,2,3,4...,8,9}; pouzit BitSet
@@ -27,7 +27,7 @@ public class Position implements Comparable <Position>  {
     public byte ROW;
     public byte COLUMN;
     public byte BOX;
-    public AtomicBoolean rowSolved;
+    public AtomicBoolean rowSolved;//pujde pryc
     public AtomicBoolean colSolved;
     public AtomicBoolean boxSolved;
     final private Board board;
@@ -73,7 +73,7 @@ public class Position implements Comparable <Position>  {
           if (valueset) {
               return false;
         }
-          
+          // Tato funkce je docasne jeste zprasena
           board.iteraceKandidatu++;
           candidatesToRemove.addAll(board.rowCandidates[x]);
           candidatesToRemove.addAll(board.colCandidates[y]); // SHROMAZDENE KANDIDATY ze vsech poli
@@ -110,52 +110,27 @@ public class Position implements Comparable <Position>  {
         board.leftToSolve--;
     }
     
-    /**
-     * LEGACY CODE
-     */
-    void removeCandidates(Set set) {
-
-        if (getCandidates().removeAll(set)) { //SNIZENI POCTU "FALESNYCH ITERACI"
-            
-            if (getCandidates().size() == 1) {
-                int tmpvalue = (byte) (int) getCandidates().toArray()[0];
-                assign(tmpvalue);
-            }
-            board.iteraceKandidatu++;
-        }
-        
-    }
-    
-  
     @Override
     public String toString() {
         return (String.valueOf(x) + "," + String.valueOf(y) + getCandidates());
     }
 
-    /**
-     * LEGACY CODE
-     */
+
     public Set getCandidates() {
         return candidates;
     }
-    
-    /**
-     * LEGACY CODE
-     */
-    public int valuesInBox() {
-        return (int) board.stream().filter(boxMatch(BOX).and(hasValue())).count();
-    }
 
     @Override
-    public int compareTo(Position o) {     //nedfinovano equals? viz findbugs
+    public int compareTo(Position o) {     //pry nedefinovano equals? ukazuje findbugs v NetBEANS
         
         if (this.x == o.x) {
-            if (this.y == o.y) return 0;// NOVE PRIDANY RADEK
+            if (this.y == o.y) return 0;// tady to se vyhodnocuje nejak jen na zacatku seznamu...
             return (this.y < o.y ? -1 : 1);
         }
         else {
             return (this.x < o.x ? -1 : 1);
         }
+        //....aneb byly tu urcite pokusy tu komparaci osidit a nekdy to projde
         //if (this.x <= o.x && this.y <= o.y) return -1; else return 1;
         
     }
