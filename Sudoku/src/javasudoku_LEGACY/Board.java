@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javasudoku;
+package javasudoku_LEGACY;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import static javasudoku.Variables.*;
-import sun.security.jca.GetInstance;
+import static javasudoku_LEGACY.Variables.*;
 
 /**
  *

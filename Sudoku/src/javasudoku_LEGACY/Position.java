@@ -1,15 +1,12 @@
 /*
  * To change this template file, choose Tools | Templates
  */
-package javasudoku;
+package javasudoku_LEGACY;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static javasudoku.GroupingPredicates.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import static javasudoku.Variables.*;
+import static javasudoku_LEGACY.GroupingPredicates.*;
 
 /**
  *

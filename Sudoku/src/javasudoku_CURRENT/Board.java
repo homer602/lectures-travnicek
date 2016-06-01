@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javasudoku1;
+package javasudoku_CURRENT;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,9 +11,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.*;
 import java.util.stream.Stream;
-import static javasudoku.Variables.*;
+import static javasudoku_CURRENT.Variables.*;
 
 /**
  *

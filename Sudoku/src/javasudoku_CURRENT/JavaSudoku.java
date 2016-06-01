@@ -1,23 +1,15 @@
-package javasudoku1;
+package javasudoku_CURRENT;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 import java.util.Map;
-import java.util.NavigableSet;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.concurrent.ConcurrentSkipListSet;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import static javasudoku.GroupingPredicates.*;
-import static javasudoku.Variables.*;
+import static javasudoku_CURRENT.GroupingPredicates.*;
+import static javasudoku_CURRENT.Variables.*;
 
 /**
  *

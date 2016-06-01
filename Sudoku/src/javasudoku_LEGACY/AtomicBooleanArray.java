@@ -3,20 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javasudoku1;
+package javasudoku_LEGACY;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import static javasudoku.Variables.*;
+import static javasudoku_LEGACY.Variables.*;
 
 /**
  *
  * @author evo
  */
-public class MyAtomicBooleanArray {
+public class AtomicBooleanArray {
 
-    private final AtomicBoolean[] solvedEntity;
+    private AtomicBoolean[] solvedEntity;
 
-    public MyAtomicBooleanArray(Board board) {
+    public AtomicBooleanArray(Board board) {
         solvedEntity = new AtomicBoolean[board.BOARD_SIZE+1];
         for (int i = 1; i <= board.BOARD_SIZE; i++) {
             solvedEntity[i] = new AtomicBoolean();

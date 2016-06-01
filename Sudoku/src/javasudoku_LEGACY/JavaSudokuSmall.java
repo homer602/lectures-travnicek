@@ -1,26 +1,13 @@
-package javasudoku;
+package javasudoku_LEGACY;
 
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
-import java.util.Spliterator;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import static javasudoku.GroupingPredicates.*;
-import static javasudoku.Variables.*;
+
+import static javasudoku_LEGACY.GroupingPredicates.*;
+import static javasudoku_LEGACY.Variables.*;
 
 /**
  *
@@ -32,7 +19,7 @@ public class JavaSudokuSmall {
     static int RowChecks = 0;
     static int ColChecks = 0;
     static int BoxChecks = 0;
-    static Board global; // STATIC FTW
+    public static Board global; // STATIC FTW
     static boolean DEBUG = false;
 
     public static void main(String[] args) {
@@ -435,7 +422,7 @@ board.solvedCols.setSolved(2);
         //Set candidates = (Set) global.board.parallelStream() //POMALEJSI PROC???*********************
       
         
-        Set removeFromCandidates = global.stream()
+        Set removeFromCandidates = (Set) global.stream()
                 .filter(predicate.and(hasValue())) // HAS VALUE SE MUZE SMAZAT KONTroluje se predtim?!!!
                 .map((i) -> ((Position) (i)).getValue() //Set reset = new HashSet(((Position) (i)).getValue());
         //return ((Position) (i)).removeCandidates(reset);// COLLECT CANDIDATES FROM ALL

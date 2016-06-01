@@ -1,30 +1,19 @@
-package javasudoku;
+package javasudoku_LEGACY;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import static javasudoku.GroupingPredicates.*;
-import static javasudoku.Variables.*;
+
+import static javasudoku_LEGACY.GroupingPredicates.*;
+import static javasudoku_LEGACY.Variables.*;
 
 /**
  *
  * @author Michal
  */
-public class JavaSudokuBig {
+public class JavaSudoku1 {
 
     //static int IteraceKandidatu = 0;
     static int RowChecks = 0;
@@ -65,8 +54,8 @@ public class JavaSudokuBig {
         board2.parseInput(setting2);
         
         
-        Board board = board1;
-        global = board1;
+        Board board = board2;
+        global = board2;
          
         //<editor-fold defaultstate="collapsed" desc="zadani">
         /*
@@ -134,6 +123,8 @@ public class JavaSudokuBig {
         board.solvedCols.setSolved(2);
         
          */
+        
+        /* ZMRSI VYSKEDKY - rozhodi razeni???????? nebo ?
         System.out.println("");
         board.printPolicka(PRINT_VALUE);
         Set reset = board.stream().filter(rowNotSolved()).collect(Collectors.toSet());
@@ -145,6 +136,9 @@ public class JavaSudokuBig {
 
         System.out.println(xset);
 
+        
+        
+        
         board.stream().sorted(new Comparator<Position>() {
             @Override
             public int compare(Position o1, Position o2) {
@@ -159,19 +153,21 @@ public class JavaSudokuBig {
         board.stream().forEach(x -> System.out.print(x));
         System.out.println("");
 
+        */
+        
         //}).collect(Collectors.toCollection(() -> new TreeSet<Position>()));
         //System.out.println(xset2);
         // System.exit(0);
         //PRIORITY QUEUE?
                 //  MALY CHEAT PRO LEPSI VYLSEDKY na 4x4
-      /*  board.solvedRows.setSolved(1);
+        board.solvedRows.setSolved(1);
         board.solvedRows.setSolved(3);
         board.solvedCols.setSolved(2);
         //board.solvedBoxes.setSolved(1);
         board.solvedBoxes.setSolved(4);
-        */ 
+         
         //System.out.println(board.positions[1][1].rowSolved);
-        JavaSudokuBig main = new JavaSudokuBig();
+        JavaSudoku1 main = new JavaSudoku1();
         MyLoopIterator looper = main.new MyLoopIterator(1, board.BOARD_SIZE);
 
         //final int CYCLES = 1000000;
@@ -223,8 +219,8 @@ public class JavaSudokuBig {
             // TAhkle se obejdem bez komparatoru
             //board.boardSet.stream().filter(hasValue()).sorted(myRevers).sorted(Comparator.comparingInt(Position::valuesInBox).reversed()).forEach((any) -> {
             
-            board.boardSet.stream().filter(hasValue()).sorted(myRevers).forEach((any) -> {
-            //board.boardSet.stream().filter(hasValue()).forEach((any) -> {
+            //board.boardSet.stream().filter(hasValue()).sorted(myRevers).forEach((any) -> {
+            board.boardSet.stream().filter(hasValue()).forEach((any) -> {
 
                 //board.boardSet.stream().filter(hasValue()).forEach((any) -> {
                 // PROZATIM SMAZU TY NEIGHBORS...
@@ -259,7 +255,7 @@ public class JavaSudokuBig {
                         //});
                     } else {
                         eliminateBy(rowMatch(row));
-                        JavaSudokuBig.RowChecks++;
+                        RowChecks++;
                     }
                 }
 
@@ -271,7 +267,7 @@ public class JavaSudokuBig {
 
                     } else {
                         eliminateBy(colMatch(col));
-                        JavaSudokuBig.ColChecks++;
+                        JavaSudoku1.ColChecks++;
                     }
 
                 }
@@ -284,7 +280,7 @@ public class JavaSudokuBig {
                         board.solvedBoxes.setSolved(box);
                     } else {
                         eliminateBy(boxMatch(box));
-                        JavaSudokuBig.BoxChecks++;
+                        JavaSudoku1.BoxChecks++;
                     }
 
                 }

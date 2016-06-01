@@ -1,7 +1,7 @@
 /*
  * To change this template file, choose Tools | Templates
  */
-package javasudoku1;
+package javasudoku_LEGACY;
 
 /**
  *
@@ -11,13 +11,13 @@ public class Variables {
     
     
     //obosolete
-    static final int BOARD_SIZ = 4;  //4 pokud je 4x4 board nebo 9 pokud je 9x9 pripadne 16x16
+    static final int BOARD_SIZE = 4;  //4 pokud je 4x4 board nebo 9 pokud je 9x9 pripadne 16x16
     //dodelat Javadoc
-    static final int BOXZE = (int) Math.sqrt(BOARD_SIZ);  //velikost maleho ramecku po 4 nebo 9
+    static final int BOXSIZE = (int) Math.sqrt(BOARD_SIZE);  //velikost maleho ramecku po 4 nebo 9
 
-    static final int NUMR = BOARD_SIZ;   //pocet kandidatu 1..9
+    static final int NUMRANGE = BOARD_SIZE;   //pocet kandidatu 1..9
     
-    public static class BoardType {
+    static class BoardType {
         public static final int SMALL = 4;
         public static final int BIG = 9;
     }
@@ -51,5 +51,5 @@ public class Variables {
             throw new IllegalArgumentException("VALUE IS OUT OF RANGE:\"" + val + "\"");
         }
     }
-    
+
 }
