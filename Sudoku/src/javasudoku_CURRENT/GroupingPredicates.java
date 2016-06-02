@@ -43,40 +43,11 @@ public class GroupingPredicates {
     /**
      * LEGACY CODE -- UZ SE NEPOUZIVA ale mozna se jeste hodi...?
      */
-    public static Predicate<Position> neighborsNotSolved() {// OR bitova maska -- A | B | C ?
-
-        //return rowNotSolved().and(colNotSolved()).and(boxNotSolved());// PROC TO PRI AND DAVA LEPSI VYSLEDEK?
-        return rowNotSolved().or(colNotSolved()).or(boxNotSolved());// JE TO DOBRE? :)
-
-    }
-
-    /**
-     * LEGACY CODE -- UZ SE NEPOUZIVA
-     */
-    public static Predicate<Position> rowNotSolved() {
-
-        return (p -> p.rowSolved.get() == false);
-
-    }
-
-    /**
-     * LEGACY CODE -- UZ SE NEPOUZIVA
-     */
-    public static Predicate<Position> colNotSolved() {
-
-        return (p -> p.colSolved.get() == false);
-
-    }
-
-    /**
-     * LEGACY CODE -- UZ SE NEPOUZIVA
-     */
-    public static Predicate<Position> boxNotSolved() {
-
-        return (p -> p.boxSolved.get() == false);
-
-    }
-
-    //public static Comparator ..?
+//    public static Predicate<Position> neighborsNotSolved() {// OR bitova maska -- A | B | C ?
+//
+//        //return rowNotSolved().and(colNotSolved()).and(boxNotSolved());// PROC TO PRI AND DAVA LEPSI VYSLEDEK?
+//        return rowNotSolved().or(colNotSolved()).or(boxNotSolved());// JE TO DOBRE? :)
+//
+//    }
 
 }

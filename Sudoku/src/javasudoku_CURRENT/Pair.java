@@ -6,7 +6,7 @@
 package javasudoku_CURRENT;
 
 /**
- *
+ * KE SMAZANI
  * Nakonec k nicemu
  */
 public class Pair {

@@ -68,20 +68,20 @@ public class JavaSudoku {
         //System.out.println(board.rowCandidates[1]);
         Set<Position> z = new HashSet();
         z.addAll(board.boardSet.values());
-//        z.stream().forEach(x -> x.clearCandidates()); //ZATIM JEN RUCNE
-//        z.stream().forEach(x -> x.clearCandidates());
-//        z.stream().forEach(x -> x.clearCandidates());
-//        z.stream().forEach(x -> x.clearCandidates());
-//        z.stream().forEach(x -> x.clearCandidates());
-//        z.stream().forEach(x -> x.clearCandidates());
+        z.stream().forEach(x -> x.clearCandidates()); //ZATIM JEN RUCNE
+        z.stream().forEach(x -> x.clearCandidates());
+        z.stream().forEach(x -> x.clearCandidates());
+        z.stream().forEach(x -> x.clearCandidates());
+        z.stream().forEach(x -> x.clearCandidates());
+        z.stream().forEach(x -> x.clearCandidates());
 
         //aha no tady muzem vyuzit ten paralel stream ale vysledky to dava nahodne
         // to je neco jako pri pouziti threadu coz je jasne :)
-        z.parallelStream().forEach(x -> x.clearCandidates());
-        z.parallelStream().forEach(x -> x.clearCandidates());
-        z.parallelStream().forEach(x -> x.clearCandidates());
-        z.parallelStream().forEach(x -> x.clearCandidates());
-        z.parallelStream().forEach(x -> x.clearCandidates());
+//        z.parallelStream().forEach(x -> x.clearCandidates());
+//        z.parallelStream().forEach(x -> x.clearCandidates());
+//        z.parallelStream().forEach(x -> x.clearCandidates());
+//        z.parallelStream().forEach(x -> x.clearCandidates());
+//        z.parallelStream().forEach(x -> x.clearCandidates());
         board.printPolicka(PRINT_CANDIDATES);
 
         //
