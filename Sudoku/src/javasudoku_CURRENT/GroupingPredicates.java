@@ -30,9 +30,8 @@ public class GroupingPredicates {
      * LEGACY CODE -- UZ SE NEPOUZIVA
      */
     public static Predicate<Position> hasValue() {
-        //int z = 1;
         return new Predicate<Position>() {
-            //public void neco(){};
+            //public void neco()?{}...nacpat sem nakou funkci;
             @Override
             public boolean test(Position p) {
                 return p.valueRef().get() > 0;// STEJNE SE UZ NEPOUZIVA
