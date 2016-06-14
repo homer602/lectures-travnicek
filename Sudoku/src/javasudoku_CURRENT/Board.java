@@ -7,8 +7,7 @@ package javasudoku_CURRENT;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
-import static javasudoku_CURRENT.Variables.*;
+import javasudoku_CURRENT.Variables.Print;
 
 /**
  *
@@ -16,49 +15,41 @@ import static javasudoku_CURRENT.Variables.*;
  */
 public final class Board {
 
-    final int BOARD_SIZE;  //4 pokud je 4x4 board nebo 9 pokud je 9x9 pripadne 16x16
-    final int BOXSIZE;  //velikost maleho ramecku po 4 nebo 9
+    final int boardSize;  //4 pokud je 4x4 board nebo 9 pokud je 9x9 pripadne 16x16
+    final int myBoxSize;  //velikost maleho ramecku po 4 nebo 9
     final int NUMRANGE;
-    //private static final int BOARD_SIZE = Variables.BOARD_SIZE; //4x4 board cislovani shora
     public int leftToSolve;
     public int iteraceKandidatu = 0;
     public Map boardSet = new HashMap<Pair, Position>(); //NESKODNY BUG V TYPU KOLEKCE //LEGACY jaky je rozdil mezi <NIC>  a <NECO>
     //public Map<Pair,Position> boardSet = new HashMap<>(); //rozdil?
     //public Map<Pair,Position> boardSet = new HashMap(); //rozdil?
     public Position[][] positions;
-    public Set<AtomicInteger>[] rowCandidates;
-    public Set<AtomicInteger>[] colCandidates;
-    public Set<AtomicInteger>[] boxCandidates;
+    //public List<Set<AtomicInteger>> rowCandidates = new ArrayList<>(new HashSet<Set<AtomicInteger>>());//redundantni definice?
+    public List<Set<AtomicInteger>> rowCandidates = new ArrayList<>();
+    public List<Set<AtomicInteger>> colCandidates = new ArrayList<>();
+    public List<Set<AtomicInteger>> boxCandidates = new ArrayList<>();
 
     public Board(int size) {
 
-        BOARD_SIZE = size; //4 pokud je 4x4 board nebo 9 pokud je 9x9 pripadne 16x16
+        boardSize = size; //4 pokud je 4x4 board nebo 9 pokud je 9x9 pripadne 16x16
 
-        BOXSIZE = (int) Math.sqrt(BOARD_SIZE);  //velikost maleho ramecku po 4 nebo 9
+        myBoxSize = (int) Math.sqrt(boardSize);  //velikost maleho ramecku - 4 nebo 9
 
-        NUMRANGE = BOARD_SIZE;
+        NUMRANGE = boardSize;
 
-        leftToSolve = BOARD_SIZE * BOARD_SIZE;
+        leftToSolve = boardSize * boardSize;
 
-        rowCandidates = new Set[NUMRANGE + 1];
-        colCandidates = new Set[NUMRANGE + 1];
-        boxCandidates = new Set[NUMRANGE + 1];
+        rowCandidates.add(0, null);//nulovy prvek
+        colCandidates.add(0, null);
+        boxCandidates.add(0, null);
+
         for (int i = 1; i <= NUMRANGE; i++) {
-            rowCandidates[i] = new HashSet();
-            colCandidates[i] = new HashSet();
-            boxCandidates[i] = new HashSet();
+            rowCandidates.add(new HashSet<>());
+            colCandidates.add(new HashSet<>());
+            boxCandidates.add(new HashSet<>());
         }
 
-
-        //NASLEDUJICI LEGACY KOD JE TROCHU HALUZ, V NETBEANS TO PRIDA, TADY UBERE POCET ITERACI
-        //VIZ I PODOBNE AKCE S CYKLY DAL... nejak se to jinak promicha v pameti
-        //PROTOZE TY MNOZINY HASHSET NEJSOU RAZENE A V PRIPADE PARALELSTREAM JE NAVIC ZPRACOVANI NELINEARNI/NAHODNE
-//        final Set initCandidates = new HashSet();
-//        for (int i = 1; i <= NUMRANGE; i++) {
-//            initCandidates.add(new AtomicInteger(i));
-//        }
-
-        this.positions = new Position[BOARD_SIZE + 1][BOARD_SIZE + 1];//+1 /nezajima me nulove pole
+        this.positions = new Position[boardSize + 1][boardSize + 1];//+1 /nezajima me nulove pole
 //        for (int x = 1; x <= BOARD_SIZE; x++) {
 //            for (int y = 1; y <= BOARD_SIZE; y++) {
 //                //je potreba predavat celou tuto sracku? co predat, jen x, y,this?  nazor? :)
@@ -71,10 +62,14 @@ public final class Board {
         //POKUD TO UDELAM TAKTO, TAK SE TO NEJAK POZDNE SYNCHRONIZUJE - VYRESI SE VE VICE ITERACICH NA THREADY (paralelStream)
         executeInDoubleLoop((x, y) -> {
             //je potreba predavat celou tuto sracku? co predat, jen x, y,this?  nazor? :)
-            positions[x][y] = new Position(x, y, Board.this, rowCandidates[x], colCandidates[y], boxCandidates[Board.this.getBox(x, y)]);
+
+            positions[x][y] = new Position(x, y, Board.this,
+                    rowCandidates.get(x),
+                    colCandidates.get(y),
+                    boxCandidates.get(Board.this.getBox(x, y))
+            );
             boardSet.put(new Pair(x, y), positions[x][y]);
         });
-
 
         //executeInDoubleLoop((x, y) -> );
         Collection<Position> temp = boardSet.values();
@@ -84,16 +79,14 @@ public final class Board {
     interface LoopRunner {
 
         public abstract void iterate(int x, int y);
-        //public abstract void postFirstLoop(int x, int y);
-
+        //public abstract void afterFirstLoop(int x, int y);//....
 
     }
 
-
     void executeInDoubleLoop(LoopRunner run) {
-        for (int x = 1; x <= BOARD_SIZE; x++) {
-            for (int y = 1; y <= BOARD_SIZE; y++) {
-                run.iterate(x,y);
+        for (int x = 1; x <= boardSize; x++) {
+            for (int y = 1; y <= boardSize; y++) {
+                run.iterate(x, y);
 
             }
         }
@@ -104,18 +97,13 @@ public final class Board {
      * poloha(cislo) ctverce
      */
     int getBox(int x, int y) {
-        int rowIndex = (int) Math.ceil((double) x / BOXSIZE) - 1;
-        return (int) ((Math.ceil((double) y / BOXSIZE)) + BOXSIZE * (rowIndex));
+        int rowIndex = (int) Math.ceil((double) x / myBoxSize) - 1;
+        return (int) ((Math.ceil((double) y / myBoxSize)) + myBoxSize * (rowIndex));
     }
 
-    //Board getInstance(){// <<<< jakoze "board." vrati rovnou board ALE jak VRATI TEN SET???
-    //    return this;
-    //}
     //Set getInstance(){// <<<< jakoze neco jako toto resp chci pres board. vyvolat nejakou kolekci
     //  return board;
     //}
-
-
     void parseInput(int[][] input) {
 
 //        for (int x = 1; x <= BOARD_SIZE; x++) {
@@ -126,7 +114,6 @@ public final class Board {
 //                }
 //            }
 //        }
-
         //TADY COKOLI SE TAKHLE ZMENI TAK TO MA VLIV NA POCET ITERACI
         executeInDoubleLoop((x, y) -> {
             int number = input[x - 1][y - 1];
@@ -137,50 +124,8 @@ public final class Board {
         });
     }
 
+    public void printPolicka(Print option) {
+        SudokuPrinter.printPolicka(option, this);
 
-    public void printPolicka(int option) {
-
-        int val = 0;
-
-        for (int x = 1; x <= BOARD_SIZE; x++) {
-            for (int y = 1; y <= BOARD_SIZE; y++) {
-
-                val = PRINT_VALUE;
-                if ((option & val) == val) { //COMPARE BITMASK
-                    System.out.print(positions[x][y].valueRef() + " ");
-                }
-                //System.out.print(policka[x][y].getBox() + " "); //VYPISE CISLA BOXU
-                Position pole = positions[x][y];
-
-                val = PRINT_CANDIDATES;
-                if ((option & val) == val) { //COMPARE BITMASK
-                    if (pole.valueRef().get() > 0) {
-                        System.out.print(pole.valueRef() + " ");
-                    } else {
-                        System.out.print(pole.getCandidates() + " ");
-                    }
-                }
-                //jakoby val = PRINT_INTERNAL;  //quick and dirty SMAZAT
-                if ((option) == 0) {
-                    if (pole.valueRef().get() > 0) {
-                        System.out.print(pole.valueRef() + " ");
-                    } else {
-                        System.out.print("*" + pole.getCandidates() + "i");
-                    }
-                }
-
-                if (y % BOXSIZE == 0 && y < BOARD_SIZE) {
-                    System.out.print("| ");
-                }
-            }
-
-            System.out.println("");
-            if (x % BOXSIZE == 0 && x < BOARD_SIZE) {
-                for (int i = 0; i <= BOARD_SIZE + BOXSIZE - 2; i++) {
-                    System.out.print("- ");
-                }
-                System.out.println("");
-            }
-        }
     }
 }

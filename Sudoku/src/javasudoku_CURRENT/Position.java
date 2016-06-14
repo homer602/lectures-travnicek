@@ -7,26 +7,24 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import static javasudoku_CURRENT.GroupingPredicates.*;
-import java.util.stream.Collectors;
+import static javasudoku_CURRENT.Variables.DEBUG;
 
 /**
  *
  * @author Michal
  */
-public class Position implements Comparable <Position>  {
+public final class Position implements Comparable<Position> {
 
     private final Set<AtomicInteger> candidatesToRemove = new HashSet();
     final private Board board;
-    private byte x;  //souradnice x
-    private byte y;  //souradnice y       //AtomicIntegerFieldUpdater >><<<<<<<???
-    private BitSet internalCandidates = new BitSet();//{0,1,2,3,4...,8,9};
-    public byte ROW;
-    public byte COLUMN;
-    public byte BOX;
-    private AtomicInteger value = new AtomicInteger(0);
+    private final byte x;  //souradnice x
+    private final byte y;  //souradnice y       //AtomicIntegerFieldUpdater >><<<<<<<???
+    private final BitSet internalCandidates = new BitSet();//{1,2,3,4...,8,9};
+    public final byte myRow;
+    public final byte myColumn;
+    public final byte myBox;
+    private final AtomicInteger value = new AtomicInteger(0);
     private boolean valueset = false;
 
     public Position(int x, int y, Board board, Set rowExt, Set colExt, Set boxExt) {//BOARD SIZE = board.size apod.. do konstruktoru
@@ -34,64 +32,87 @@ public class Position implements Comparable <Position>  {
         this.y = (byte) y;
         this.board = board;
 
-        internalCandidates.set(1, board.NUMRANGE+1);
+        internalCandidates.set(1, board.NUMRANGE + 1);
 
         rowExt.add(valueRef());
         colExt.add(valueRef());
         boxExt.add(valueRef());
 
-
         candidatesToRemove.addAll(rowExt);
         candidatesToRemove.addAll(colExt);
         candidatesToRemove.addAll(boxExt);
-        
-        ROW = (byte) x;
-        COLUMN = (byte) y;    // x = ROW -- REDUNDANCE
-        
-        BOX = (byte) board.getBox(x, y);
+
+        myRow = (byte) x;
+        myColumn = (byte) y;    // x = ROW -- REDUNDANCE
+
+        myBox = (byte) board.getBox(x, y);
 
     }
 
-    public void addSetIntersection () {
-        candidatesToRemove.addAll(board.rowCandidates[ROW]);
-        candidatesToRemove.addAll(board.colCandidates[COLUMN]);
-        candidatesToRemove.addAll(board.boxCandidates[BOX]);
+    public void addSetIntersection() {
+        candidatesToRemove.addAll(board.rowCandidates.get(myRow));
+        candidatesToRemove.addAll(board.colCandidates.get(myColumn));
+        candidatesToRemove.addAll(board.boxCandidates.get(myBox));
+        //tady sem mel vsude ROWCANDIDATES !!!!!!!!!!!!
+        //System.out.println("cre:"+candidatesToRemove);
 
     }
 
-    public boolean clearCandidates() {
+    public boolean clearCandidates() {//vracime bool
 
         if (valueset) {
             return false;
         }
-        System.out.println("i:"+internalCandidates);
-        System.out.println("r:"+candidatesToRemove);
+        //
+        if (DEBUG) {
+            System.out.println("row" + board.rowCandidates.get(myRow));
+            System.out.println("col" + board.colCandidates.get(myColumn));
+            System.out.println("box" + board.boxCandidates.get(myBox));
+            
+            System.out.println("int:" + internalCandidates);
+            System.out.println("rem:" + candidatesToRemove);
+        }
 
-        board.iteraceKandidatu++;
+        board.iteraceKandidatu++;//TODO pouzit nejaky listener/callback?
         candidatesToRemove.stream().forEach((AtomicInteger m) -> {
             //NACTU A PRIRADIM (ODEBERU Z MNOZINY) SKUTECNE HODNOTY ODKAZOVANYCH CISEL
-            if (internalCandidates.get(m.get()))
-                internalCandidates.clear(m.get());
+            int numero = m.get();
+            if (internalCandidates.get(numero)) {
+                internalCandidates.clear(numero);
+            }
         });
         //pomoci distinct lze odebrat dupicity ale asi nema cenu
 
-        System.out.println(internalCandidates.cardinality());
-        if (internalCandidates.cardinality()== 1 && value.get() == 0) {//kdyz se nekontroluje value tak to "zahadne" propaguje
+        if (DEBUG) {
+            System.out.println(this + "Cardinality:" + internalCandidates.cardinality());
+        }
+
+        if (internalCandidates.cardinality() == 1 && value.get() == 0) {//kdyz se nekontroluje value tak to "zahadne" propaguje
             int tmpvalue = (byte) (int) internalCandidates.nextSetBit(1);
+            if (DEBUG) {
+                System.out.println("set:" + tmpvalue);
+                System.out.println("");
+            }
             assign(tmpvalue);
             return true;
 
         }
+        if (DEBUG) {
+            System.out.println("");
+        }
         return false;
     }
 
-
     public AtomicInteger valueRef() {
-        return value; 
+        return value;
+    }
+
+    public int getValue() {
+        return value.get();
     }
 
     public int getBox() {
-        return (int) BOX; //Nutne pretypovat au
+        return (int) myBox; //Nutne pretypovat au
     }
 
     void assign(int num) {
@@ -102,30 +123,32 @@ public class Position implements Comparable <Position>  {
         value.set(num);
         board.leftToSolve--;
     }
-    
+
     @Override
     public String toString() {
         return (String.valueOf(x) + "," + String.valueOf(y) + getCandidates());
     }
 
-
-    public Set getCandidates() {
-        return new HashSet (Arrays.asList(internalCandidates.toByteArray()));
+    public String getCandidates() {
+        //to stare fungovalo?
+        //return new HashSet (Arrays.asList(internalCandidates.toByteArray()));
+        return internalCandidates.toString();
     }
 
     @Override
     public int compareTo(Position o) {     //pry nedefinovano equals? ukazuje findbugs v NetBEANS
-        
+
         if (this.x == o.x) {
-            if (this.y == o.y) return 0;// tady to se vyhodnocuje nejak jen na zacatku seznamu...
+            if (this.y == o.y) {
+                return 0;// tady to se vyhodnocuje nejak jen na zacatku seznamu...
+            }
             return (this.y < o.y ? -1 : 1);
-        }
-        else {
+        } else {
             return (this.x < o.x ? -1 : 1);
         }
         //....aneb byly tu urcite pokusy tu komparaci osidit a nekdy to projde
         //if (this.x <= o.x && this.y <= o.y) return -1; else return 1;
-        
+
     }
 
 }
