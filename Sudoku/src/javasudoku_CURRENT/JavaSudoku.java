@@ -42,7 +42,7 @@ public class JavaSudoku {
         Board board = BOARD_SMALL;
 
         if (DEBUG) {
-            //board.printPolicka(new Print.PRINT_CANDIDATES);
+            board.printPolicka(Print.PRINT_CANDIDATES);
         }
         System.out.println("");
 

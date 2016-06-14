@@ -35,6 +35,7 @@ public class SudokuPrinter {
                     System.out.print("| ");
                 }
             }
+
             // TADY BY TO CHTELO NEJAKY COLORING TECH PODCYKLU
             System.out.println("");
             if (x % board.myBoxSize == 0 && x < board.boardSize) {

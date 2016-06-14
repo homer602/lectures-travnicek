@@ -18,9 +18,6 @@ public class Variables {
         public static final int BIG = 9;
     }
 
-    /**
-     * BITOVA MASKA
-     */
     public enum Print {
 
         PRINT_VALUE,

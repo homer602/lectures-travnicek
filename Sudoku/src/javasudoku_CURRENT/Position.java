@@ -53,7 +53,7 @@ public final class Position implements Comparable<Position> {
         candidatesToRemove.addAll(board.rowCandidates.get(myRow));
         candidatesToRemove.addAll(board.colCandidates.get(myColumn));
         candidatesToRemove.addAll(board.boxCandidates.get(myBox));
-        //tady sem mel vsude ROWCANDIDATES !!!!!!!!!!!!
+        //tady sem mel vsude ROWCANDIDATES !!!!!!!!!!
         //System.out.println("cre:"+candidatesToRemove);
 
     }

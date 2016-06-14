@@ -114,6 +114,7 @@ public final class Board {
 //                }
 //            }
 //        }
+
         //TADY COKOLI SE TAKHLE ZMENI TAK TO MA VLIV NA POCET ITERACI
         executeInDoubleLoop((x, y) -> {
             int number = input[x - 1][y - 1];
