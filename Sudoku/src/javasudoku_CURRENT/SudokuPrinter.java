@@ -30,7 +30,6 @@ public class SudokuPrinter {
                         System.out.print(pole.getCandidates() + " ");
                     }
                 }
-                
 
                 if (y % board.myBoxSize == 0 && y < board.boardSize) {
                     System.out.print("| ");
